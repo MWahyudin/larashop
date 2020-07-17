@@ -24,6 +24,7 @@ class UserController extends Controller
     public function index()
     {
         //
+
         $users = User::latest()->paginate(10);
         return view('users.index', compact('users'));
     }
@@ -76,6 +77,8 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user = User::findOrFail($id);
+        return view('users.detail', compact('user'));
     }
 
     /**
@@ -104,17 +107,14 @@ class UserController extends Controller
         $user->roles = json_encode($request->get('roles'));
         $user->address = $request->get('address');
         $user->phone = $request->get('phone');
-        if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
+        if ($request->hasFile('avatar')) {
             Storage::delete('public/' . $user->avatar);
             $file = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $file;
-        } elseif($request->file('avatar')){
-            $file = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $file;
-        }
+        } 
+        // dd($user);
         $user->save();
-        return redirect()->route('user.edit', [$id])->with('status', 'User
-succesfully updated');
+        return redirect()->route('user.edit', [$id])->with('status', 'User succesfully update');
     }
 
     /**
@@ -125,6 +125,9 @@ succesfully updated');
      */
     public function destroy($id)
     {
-        //
+        $user = \App\User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('user.index')->with('status', 'User successfully delete');
+
     }
 }

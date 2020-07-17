@@ -32,7 +32,10 @@
             @csrf 
             @method('DELETE')
             <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary"> Edit</a> | 
-            <button  class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')"> Delete</button>
+            <a class="btn btn-primary btn-sm" href="{{ route('user.show', $user->id) }}">
+              Detail
+            </a>
+            <button  class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')"> Delete</button>
        </form> </td>
           <?php $no++ ?>
         </tr>
@@ -40,5 +43,8 @@
     </tbody>
 </table>
 
+
 <a href="{{ route('user.create') }}" class="btn btn-info btn-sm"><span class="oi oi-plus"></span> User</a>
 @endsection
+
+

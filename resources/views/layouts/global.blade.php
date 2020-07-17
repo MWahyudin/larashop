@@ -10,8 +10,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Larashop | @yield("title")</title>
     <link rel="stylesheet" href="{{ asset('polished/polished.min.css') }}">
+   <script src="{{ asset('js/jquery.min.js') }}"></script>
+
     <link rel="stylesheet"
         href="{{ asset('polished/iconic/css/open-iconic-bootstrap.min.css') }}">
+       
     <style>
         .grid-highlight {
             padding-top: 1rem;
@@ -77,11 +80,13 @@ d-md-block w-50 ml-3 mr-2" type="text" placeholder="Search" arialabel="Search">
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    {{--  <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>  --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.
 min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min
 .js" crossorigin="anonymous"></script>
 </body>
 
+
+@yield('jscript')
 </html>
