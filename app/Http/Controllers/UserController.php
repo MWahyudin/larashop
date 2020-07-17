@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Console\Input\Input;
 
 class UserController extends Controller
 {
@@ -23,16 +24,44 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        //
-        $users = User::latest()->paginate(10);
-        $keyword = $request->get('keyword');
-        if ($keyword) {
-           
-            $users = User::where('name', 'LIKE', '%' .$keyword .'%')->orWhere('email', 'LIKE', '%' .$keyword .'%')->orWhere('phone', 'LIKE', '%' .$keyword .'%')->paginate(10);
-        }
+      $users = User::latest()->paginate(10);
         return view('users.index', compact('users'));
     }
 
+    public function userSearch(Request $request)
+    {
+        $filters = [
+            'keyword' => $request->get('keyword'),
+            'active' => $request->get('active'),
+            'inactive' => $request->get('inactive')
+        ];
+       if($request->keyword === null){
+        $users = User::latest()->paginate();
+       }else{
+       
+        $users = User::where(function ($query) use ($filters) {
+            if ($filters['keyword']) {
+                if($filters['active']){
+                $query->where('name', 'LIKE', '%'.$filters['keyword'].'%')->orwhere('email', 'LIKE', '%'.$filters['keyword'].'%')->orwhere('phone', 'LIKE', '%'.$filters['keyword'].'%')->where('status', '=', $filters['active']);;
+
+                }elseif($filters['inactive']){
+                $query->where('name', 'LIKE', '%'.$filters['keyword'].'%')->where('email', 'LIKE', '%'.$filters['keyword'].'%')->where('phone', 'LIKE', '%'.$filters['keyword'].'%')->where('status',$filters['inactive']);;
+            }else{
+                $query->where('name', 'LIKE', '%'.$filters['keyword'].'%')->orwhere('email', 'LIKE', '%'.$filters['keyword'].'%')->orwhere('phone', 'LIKE', '%'.$filters['keyword'].'%');
+            }
+        }
+             else if ($filters['active']) {
+                $query->where('status', '=', $filters['active']);
+            }
+            $query->where('status', '=', $filters['inactive']);
+        })->get();
+    }
+     
+    
+            return view('users.index', compact('users'));
+    }
+
+    
     /**
      * Show the form for creating a new resource.
      *

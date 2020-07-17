@@ -6,7 +6,7 @@ p-0 collapse d-md-inline" id="sidebar-nav">
 mb-4" type="text" placeholder="Search" aria-label="Search" />
             <li><a href="/home"><span class="oi oi-home"></span>
                     Home</a></li> 
-                    <li><a href="{{ route('user.index') }}"><span class="oi oi-person"></span>
+                    <li><a href="{{ route('users.index') }}"><span class="oi oi-person"></span>
                     List users</a></li>
 
                     <div class="d-block d-md-none">
