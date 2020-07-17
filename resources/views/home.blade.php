@@ -1,5 +1,6 @@
 @extends("layouts.global")
 @section('title', 'Dashboard')
+@section('pageTitle', 'Dashboard')
 
 @section('content')
 <div class="container">
