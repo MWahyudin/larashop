@@ -21,11 +21,15 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         //
-
         $users = User::latest()->paginate(10);
+        $keyword = $request->get('keyword');
+        if ($keyword) {
+           
+            $users = User::where('name', 'LIKE', '%' .$keyword .'%')->orWhere('email', 'LIKE', '%' .$keyword .'%')->orWhere('phone', 'LIKE', '%' .$keyword .'%')->paginate(10);
+        }
         return view('users.index', compact('users'));
     }
 
@@ -111,7 +115,7 @@ class UserController extends Controller
             Storage::delete('public/' . $user->avatar);
             $file = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $file;
-        } 
+        }
         // dd($user);
         $user->save();
         return redirect()->route('user.edit', [$id])->with('status', 'User succesfully update');
