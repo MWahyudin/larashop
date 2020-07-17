@@ -10,10 +10,13 @@
 <table class="table table-hover table-responsive-md">
     <thead class="thead-dark">
         <tr>
-            <th scope="col">No</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Picture</th>
+          <th><b>No</b></th>
+          <th><b>Name</b></th>
+          <th><b>Username</b></th>
+          <th><b>Email</b></th>
+          <th><b>Avatar</b></th>
+          <th><b>Action</b></th>
+         
         </tr>
     </thead>
     <tbody>
@@ -21,9 +24,16 @@
       @foreach ($users as $user)
         <tr>
           <th scope="row">{{ $no }}</th>
-          <td>{{ $user->email }}</td>
+          <td>{{ $user->name }}</td>
+          <td>{{ $user->username }}</td>
           <td>{{ $user->email }}</td>
           <td><img src="{{ asset('storage/'.$user->avatar) }}" alt="" srcset="" height="60px" width="70px"></td>
+          <td><form action="{{ route('user.destroy', $user->id) }}" method="POST">
+            @csrf 
+            @method('DELETE')
+            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary"> Edit</a> | 
+            <button  class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')"> Delete</button>
+       </form> </td>
           <?php $no++ ?>
         </tr>
         @endforeach
