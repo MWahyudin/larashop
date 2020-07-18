@@ -84,11 +84,10 @@
     <tfoot>
         <tr>
         <td colspan=10>
-        {{$users->appends($request->all())->links()}}
+        {{$users->links()}}
         </td>
         </tr>
        </tfoot>
-       
 </table>
 
 

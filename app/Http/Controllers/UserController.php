@@ -35,9 +35,21 @@ class UserController extends Controller
             'active' => $request->get('active'),
             'inactive' => $request->get('inactive')
         ];
-       if($request->keyword === null){
-        $users = User::latest()->paginate();
-       }else{
+       
+       if($request->keyword === null && $request->inactive){
+        // $users = User::latest()->paginate(10);
+        $users = User::where('status', $request->inactive)->paginate(10);
+    }
+    elseif($request->keyword === null && $request->active){
+        // $users = User::latest()->paginate(10);
+        $users = User::where('status', $request->active)->paginate(10);
+    }elseif($request->keyword === null){
+        $users = User::latest()->paginate(10);
+        
+    }
+        // dd($request->keyword, $request->inactive);
+
+       else{
        
         $users = User::where(function ($query) use ($filters) {
             if ($filters['keyword']) {
@@ -54,7 +66,7 @@ class UserController extends Controller
                 $query->where('status', '=', $filters['active']);
             }
             $query->where('status', '=', $filters['inactive']);
-        })->get();
+        })->paginate(10);
     }
      
             return view('users.index', compact('users'));
