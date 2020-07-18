@@ -57,7 +57,6 @@ class UserController extends Controller
         })->get();
     }
      
-    
             return view('users.index', compact('users'));
     }
 
