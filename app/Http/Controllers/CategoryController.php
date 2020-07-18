@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -28,7 +29,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-      return view('categories.create');
+        return view('categories.create');
         //
     }
 
@@ -40,25 +41,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        
 
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $image_path = $request->file('image')->store('category_images', 'public');
             Category::create([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'created_by' => Auth()->user()->id,
-                'image' => $image_path
+                'image' => $image_path,
             ]);
-            }else{
+        } else {
             Category::create([
                 'name' => $request->name,
                 'slug' => Str::slug($request->name),
                 'created_by' => Auth()->user()->id,
             ]);
-            }
-           
-        return redirect()->route('categories.index')->with('status','Category succesfuly added');
+        }
+
+        return redirect()->route('categories.index')->with('status', 'Category succesfuly added');
     }
 
     /**
@@ -69,7 +69,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view('categories.show', compact('category'));
     }
 
     /**
@@ -80,7 +80,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -92,7 +92,33 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        
+        $data = $request->validate([
+            'name' => 'required|min:8',
+        ]);
+
+       
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('category_images', 'public');
+            Storage::delete('public/'.$category->image);
+            $category->update(array_merge($data, [
+                'slug' => str::slug($request->name),
+                'image' => $image_path,
+                'created_by' => auth()->user()->id,
+                'updated_by' => auth()->user()->id,
+            ]));
+
+        }else{
+            $category->update(array_merge($data, [
+                'slug' => str::slug($request->name),
+                'created_by' => auth()->user()->id,
+                'updated_by' => auth()->user()->id,
+            ]));
+        }
+
+        // dd($file);
+
+        return redirect()->route('categories.edit', [$category->id])->with('status', 'Succesfuly updated');
     }
 
     /**
@@ -103,6 +129,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('status','Successfuly deleted');
     }
 }

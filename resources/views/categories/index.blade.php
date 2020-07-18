@@ -36,7 +36,19 @@
                             @endif
                         </td>
                         <td>
-                            [TODO: actions]
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <a href="{{ route('categories.edit', $category->id) }}"
+                                    class="btn btn-info btn-sm">
+                                    Edit</a> |
+                                <a class="btn btn-primary btn-sm"
+                                    href="{{ route('categories.show', $category->id) }}">
+                                    Detail
+                                </a> |
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this item?')"> Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

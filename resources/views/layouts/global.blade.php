@@ -71,7 +71,7 @@ d-md-block w-50 ml-3 mr-2" type="text" placeholder="Search" arialabel="Search">
             <div class="col-lg-10 col-md-9 p-4">
                 <div class="row ">
                     <div class="col-md-12 pl-3 pt-2">
-                        <div class="pl-3">
+                        <div class="">
                             <h3>@yield("pageTitle")</h3>
                         </div>
                     </div>
