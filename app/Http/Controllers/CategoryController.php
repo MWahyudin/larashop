@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -14,7 +16,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::latest()->paginate(10);
+
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -24,6 +28,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+      return view('categories.create');
         //
     }
 
@@ -35,7 +40,25 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+
+        if($request->hasFile('image')){
+            $image_path = $request->file('image')->store('category_images', 'public');
+            Category::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'created_by' => Auth()->user()->id,
+                'image' => $image_path
+            ]);
+            }else{
+            Category::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'created_by' => Auth()->user()->id,
+            ]);
+            }
+           
+        return redirect()->route('categories.index')->with('status','Category succesfuly added');
     }
 
     /**

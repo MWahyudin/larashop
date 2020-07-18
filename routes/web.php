@@ -28,3 +28,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 //User
 Route::resource('users', 'UserController');
 Route::get('user/search', 'UserController@userSearch')->name('user.search');
+
+//Category
+Route::resource('categories', 'CategoryController');
+
