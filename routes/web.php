@@ -29,6 +29,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('users', 'UserController');
 Route::get('user/search', 'UserController@userSearch')->name('user.search');
 
+
+//trash category
+Route::get('categories/trash', 'CategoryController@trash')->name('categories.trash');
+Route::get('categories/restore/{id}', 'CategoryController@restore')->name('categories.restore');
+Route::delete('categories/delete/{id}', 'CategoryController@delete')->name('categories.delete');
 //Category
 Route::resource('categories', 'CategoryController');
+
 

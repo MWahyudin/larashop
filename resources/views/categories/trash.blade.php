@@ -1,6 +1,6 @@
 @extends('layouts.global')
-@section('title','List Categories')
-@section('pageTitle','List categories')
+@section('title','Trash Categories')
+@section('pageTitle','Trash categories')
 
 @section('content')
 @if(session('status'))
@@ -8,11 +8,16 @@
         {{ session('status') }}
     </div>
 @endif
+@if(session('error'))
+  <div class='alert alert-danger'>
+      {{session('error')}}
+  </div>
+@endif
 <div class="row">
     <div class="col-md-12">
         <div class="row">
-            <div class="col-md-6">
-                <form action="{{ route('categories.index') }}">
+            <div class="col-md-6 mb-4">
+                <form action="{{ route('categories.trash') }}">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Filter by category name"
                             value="{{ Request::get('name') }}" name="name">
@@ -23,18 +28,6 @@
                     </div>
 
                 </form>
-            </div>
-            <div class="col-md-6">
-                <ul class="nav nav-pills card-header-pills">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="
-               {{ route('categories.index') }}">Published</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="
-               {{ route('categories.trash') }}">Trash <span>{{ $trash }}</span></a>
-                    </li>
-                </ul>
             </div>
         </div>
 
@@ -64,21 +57,32 @@
                             @endif
                         </td>
                         <td>
-                            <form action="{{ route('categories.destroy', $category->id) }}"
+                            {{-- <form action="{{ route('categories.delete', $category->id) }}"
+                            method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <a class="btn btn-primary btn-sm"
+                                href="{{ route('categories.restore', $category->id) }}">
+                                Restore
+                            </a> |
+                            <button class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this item?')">
+                                Delete permanent</button>
+                            </form> --}}
+                            <form action="{{ route('categories.delete', $category->id) }}"
                                 method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <a href="{{ route('categories.edit', $category->id) }}"
-                                    class="btn btn-info btn-sm">
-                                    Edit</a> |
-                                <a class="btn btn-primary btn-sm"
-                                    href="{{ route('categories.show', $category->id) }}">
-                                    Detail
+                            
+                                <a class="btn btn-success btn-sm"
+                                    href="{{ route('categories.restore', $category->id) }}">
+                                    Restore
                                 </a> |
                                 <button class="btn btn-danger btn-sm"
                                     onclick="return confirm('Are you sure you want to delete this item?')">
                                     Delete</button>
                             </form>
+
                         </td>
                     </tr>
                 @endforeach
@@ -90,9 +94,7 @@
                     </td>
                 </tr>
             </tfoot>
-            <a href="{{ route('categories.create') }}"" class=" btn btn-primary mt-4 mb-4">
-                Add new category
-            </a>
+           
         </table>
 
     </div>

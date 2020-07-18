@@ -15,11 +15,22 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function __construct()
     {
-        $categories = Category::latest()->paginate(10);
-
-        return view('categories.index', compact('categories'));
+        $this->middleware('auth');
+    }
+    public function index(Request $request)
+    {
+        $trash = Category::onlyTrashed()->count();
+       
+        
+    
+        if ($request->name) {
+            $categories = Category::where('name', 'LIKE', '%' . $request->name . '%')->paginate(10);
+        } else {
+            $categories = Category::latest()->paginate(10);
+        }
+        return view('categories.index', compact('categories','trash'));
     }
 
     /**
@@ -92,15 +103,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        
+
         $data = $request->validate([
             'name' => 'required|min:8',
         ]);
 
-       
         if ($request->hasFile('image')) {
             $image_path = $request->file('image')->store('category_images', 'public');
-            Storage::delete('public/'.$category->image);
+            Storage::delete('public/' . $category->image);
             $category->update(array_merge($data, [
                 'slug' => str::slug($request->name),
                 'image' => $image_path,
@@ -108,7 +118,7 @@ class CategoryController extends Controller
                 'updated_by' => auth()->user()->id,
             ]));
 
-        }else{
+        } else {
             $category->update(array_merge($data, [
                 'slug' => str::slug($request->name),
                 'created_by' => auth()->user()->id,
@@ -131,6 +141,43 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('categories.index')->with('status','Successfuly deleted');
+        return redirect()->route('categories.index')->with('status', 'Successfuly deleted');
+    }
+
+    public function delete($id)
+    {
+        $category = \App\Category::withTrashed()->findOrFail($id);
+        if (!$category->trashed()) {
+            return redirect()->route('categories.trash')
+                ->with('error', 'Can not delete permanent active category');
+        } else {
+            $category->forceDelete();
+            return redirect()->route('categories.trash')
+                ->with('status', 'Successfuly delete permanent category');
+        }
+
+    }
+
+    public function trash(Request $request)
+    {
+
+        if ($request->name) {
+            $categories = Category::onlyTrashed()->where('name', 'LIKE', '%' . $request->name . '%')->paginate(10);
+        } else {
+            $categories = Category::onlyTrashed()->paginate(10);
+        }
+        return view('categories.trash', compact('categories'));
+    }
+
+    public function restore($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+        if($category->trashed()){
+            $category->restore();
+        }else{
+            return redirect()->route('categories.trash')->with('error','category doesnt exits in trash');
+        }
+        // $category->withTrashed()->restore();
+        return redirect()->route('categories.trash')->with('status', 'Successfuly restored category');
     }
 }
