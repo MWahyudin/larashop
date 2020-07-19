@@ -13,6 +13,7 @@ $factory->define(Category::class, function (Faker $faker) {
     return [
         'name' => $productName,
         'slug' => str::slug($productName),
+        'image' => 'category_images/category_img.png',
         'created_by' => $faker->numberBetween($min = 1 , $max = 5),
         'updated_by' => $faker->numberBetween($min = 1 , $max = 5),
 

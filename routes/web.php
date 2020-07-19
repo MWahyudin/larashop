@@ -37,4 +37,7 @@ Route::delete('categories/delete/{id}', 'CategoryController@delete')->name('cate
 //Category
 Route::resource('categories', 'CategoryController');
 
+//Book
+Route::resource('books', 'BookController');
+
 
