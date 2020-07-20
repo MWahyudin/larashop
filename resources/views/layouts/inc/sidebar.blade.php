@@ -8,9 +8,9 @@ mb-4" type="text" placeholder="Search" aria-label="Search" />
                     Home</a></li> 
                     <li><a href="{{ route('users.index') }}"><span class="oi oi-person"></span>
                     List users</a></li> 
-                    <li><a href="{{ route('categories.index') }}"><span class="oi oi-person"></span>
+                    <li><a href="{{ route('categories.index') }}"><span class="oi oi-list-rich"></span>
                     List Categories</a></li>
-                    <li><a href="{{ route('books.index') }}"><span class="oi oi-person"></span>
+                    <li><a href="{{ route('books.index') }}"><span class="oi oi-book"></span>
                         List Book</a></li>
 
                     <div class="d-block d-md-none">

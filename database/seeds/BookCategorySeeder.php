@@ -12,6 +12,8 @@ class BookCategorySeeder extends Seeder
     public function run()
     {
         //
-        factory(App\BookCategory::class, 20)->create();
+        $books = factory(App\Book::class, 10)->create()->each(function ($book) {
+            $book->categories()->save(factory(App\Category::class)->make());
+        });
     }
 }

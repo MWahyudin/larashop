@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
@@ -17,7 +19,7 @@ class BookController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         $books = Book::latest()->paginate(10);
@@ -32,7 +34,7 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        return view('books.create');
     }
 
     /**
@@ -43,7 +45,34 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->validate([
+            'title' => "required|min:8",
+            'description' => "required|min:5",
+            'author' => "required|min:8",
+            'publisher' => "required|min:8",
+            'price' => "required",
+            'stock' => "required",
+            'cover' => "nullable|mimes:jpeg,png,bmp",
+        ]);
+
+       $cover = $request->file('cover');
+        if($request->hasFile('cover')){
+            $path =$cover->store('books-covers', 'public');
+        
+        }
+        $path = 'book-covers/AXZRAPBfc4uLe9u8aZanAIO5rpzpG2RPubW3s4Qo.png';
+
+         
+        Book::create(array_merge($data,[
+            'cover' => $path,
+            'slug' => Str::slug($request->get('title')),
+            'created_by' => Auth()->user()->id,
+            'status' => $request->save_action
+        ]));
+
+        $status = $request->save_action === "PUBLISH" ? 'Book succesfully saved and published' : 'Book saved as draft';
+    return redirect()->route('books.create')->with('status',$status);
     }
 
     /**

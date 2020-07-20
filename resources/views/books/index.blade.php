@@ -8,11 +8,8 @@
         <table class="table table-bordered table-stripped">
             <thead>
                 <tr>
-                    <th>No</th>
                     <th><b>Title</b></th>
-                    <th><b>Description</b></th>
                     <th><b>Author</b></th>
-                    <th><b>Publisher</b></th>
                     <th><b>Cover</b></th>
                     <th><b>Price</b></th>
                     <th><b>Status</b></th>
@@ -23,14 +20,12 @@
 
                 @foreach($books as $item => $book)
                     <tr>
-                        <td>{{ $item + $books->firstItem() }}</td>
                         <td>{{ $book->title }}</td>
-                        <td>{{ $book->description }}</td>
                         <td>{{ $book->author }}</td>
-                        <td>{{ $book->publisher }}</td>
+                    
                         <td>
                             @if($book->cover)
-                                <img src="{{ asset('storage/' . $book->image) }}"
+                                <img src="{{ asset('storage/' . $book->cover) }}"
                                     width="48px" />
                             @else
                                 No image

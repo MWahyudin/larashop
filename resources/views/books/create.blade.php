@@ -3,7 +3,22 @@
 @section('pageTitle','Create book')
 
 @section('content')
+@if(session('status'))
+<div class='alert alert-success'>
+    {{session('status')}}
+</div>
+@endif
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <div class="row">
+  
     <div class="col-md-8">
         <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data"
             class="shadow-sm p-3 bg-white">
@@ -36,3 +51,4 @@
     </div>
 </div>
 @endsection
+
